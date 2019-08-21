@@ -71,6 +71,11 @@ if [ ! -z "${GF_INSTALL_PLUGINS}" ]; then
   done
 fi
 
+# Substitutes the values of environment variables.
+# It's useful if you want to keep the credentials out of the normal config, like K8S secrets 
+find /etc/grafana/provisioning/datasources/ -name '*.yml' -or -name '*.yaml' \
+  -exec sh -c 'envsubst < "$1" > "$1"' x {} \;
+
 exec grafana-server                                         \
   --homepath="$GF_PATHS_HOME"                               \
   --config="$GF_PATHS_CONFIG"                               \
